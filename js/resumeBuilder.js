@@ -26,9 +26,9 @@ var work = {
         {
             title: "Research Grantee",
             employer: "Vale Institute of Technology",
-            dates: 3,
+            dates: "2014 - Present",
             location: "Belém",
-            description: ""
+            description: "I do research in the Brain Computer Interfaces (BCI) field."
         }
     ]
 };
@@ -66,12 +66,87 @@ var education = {
     ]
 };
 
+// jQuery solution
+// formattedName = HTMLheaderName.replace('%data%', bio.name);
+// formattedRole = HTMLheaderRole.replace('%data%', bio.role);
+// $('#main').prepend(formattedRole);
+// $('#main').prepend(formattedName);
 
-var formattedName = document.createElement('h1');
-formattedName.innerHTML = HTMLheaderName.replace("%data%", bio.name);
-var formattedRole = document.createElement('span');
-formattedRole.innerHTML = HTMLheaderRole.replace("%data%", bio.role);
-
+// Vanilla Js solution
+var formattedName = htmlWrapper(HTMLheaderName.replace("%data%", bio.name));
+var formattedRole = htmlWrapper(HTMLheaderRole.replace("%data%", bio.role));
 var myMain = document.getElementById('main');
-myMain.insertBefore(formattedRole, myMain.firstChild);
+var fRoleLength = formattedRole.length;
+for (var i = fRoleLength - 1; i >= 0; i--) {
+    myMain.insertBefore(formattedRole[i], myMain.firstChild);
+}
 myMain.insertBefore(formattedName, myMain.firstChild);
+
+
+if (bio.skills.length > 0) {
+    // jQuery solution
+    // $('#header').append(HTMLskillsStart);
+    // for (var i = 0; i < bio.skills.length; i++) {
+    //     $('#skills').append(HTMLskills.replace('%data%', bio.skills[i]))
+    // }
+
+    // vanilla Js solution
+    var skillsStart = htmlWrapper(HTMLskillsStart);
+    for (var i = 0; i <= skillsStart.length; i++) {
+        document.getElementById('header').appendChild(skillsStart[0]);
+    }
+    for (var i = 0; i < bio.skills.length; i++) {
+        var sk = htmlWrapper(HTMLskills.replace("%data%", bio.skills[i]));
+        document.getElementById('skills').appendChild(sk)
+    }
+
+}
+
+displayWork();
+
+// Vanilla Js solution
+document.getElementById('main').appendChild(htmlWrapper(internationalizeButton));
+
+function htmlWrapper(htmlInput) {
+    var wrapper = document.createElement('div');
+    wrapper.innerHTML = htmlInput;
+    if (wrapper.childElementCount > 1) {
+        return wrapper.childNodes;
+    } else {
+        return wrapper.firstChild;
+    }
+}
+
+function displayWork() {
+    for (job in work.jobs) {
+        var formattedEmployer = HTMLworkEmployer.replace('%data%', work.jobs[job].employer);
+        var formattedTitle = HTMLworkTitle.replace('%data%', work.jobs[job].title);
+        var formattedEmployerTitle = formattedEmployer + formattedTitle;
+        var formattedDates = HTMLworkDates.replace('%data%', work.jobs[job].dates);
+        var formattedLocation = HTMLworkLocation.replace('%data%', work.jobs[job].location);
+        var formattedDescription = HTMLworkDescription.replace('%data%', work.jobs[job].description);
+
+        // jQuery solution
+        // $('#workExperience').append(HTMLworkStart);
+        // $('.work-entry:last').append(formattedEmployerTitle);
+        // $('.work-entry:last').append(formattedDates);
+        // $('.work-entry:last').append(formattedLocation);
+        // $('.work-entry:last').append(formattedDescription);
+
+        // Vanilla Js solution
+        document.getElementById('workExperience').appendChild(htmlWrapper(HTMLworkStart));
+        var workEntries = document.getElementsByClassName('work-entry');
+        var lastWorkEntry = workEntries[workEntries.length-1];
+        lastWorkEntry.appendChild(htmlWrapper(formattedEmployerTitle));
+        lastWorkEntry.appendChild(htmlWrapper(formattedDates));
+        lastWorkEntry.appendChild(htmlWrapper(formattedLocation));
+        lastWorkEntry.appendChild(htmlWrapper(formattedDescription));
+    }
+}
+
+function inName(_name) {
+    var names = _name.trim().split(" ");
+    var firstName = names[0].slice(0, 1).toUpperCase() + names[0].slice(1).toLowerCase();
+    var lastName = names[1].toUpperCase();
+    return [firstName, lastName].join(" ");
+}
