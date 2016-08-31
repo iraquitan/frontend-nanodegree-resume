@@ -18,8 +18,38 @@ var bio = {
     },
     biopic: picture,
     welcomeMessage: welcomeMessage,
-    skills: skills
+    skills: skills,
+    display: function () {
+        var formattedName = HTMLheaderName.replace('%data%', bio.name);
+        var formattedRole = HTMLheaderRole.replace('%data%', bio.role);
+
+        // jQuery solution
+        // $('#main').prepend(formattedRole);
+        // $('#main').prepend(formattedName);
+
+        // Vanilla Js solution
+        var mainDiv = document.getElementById('main');
+        mainDiv.innerHTML = formattedRole + mainDiv.innerHTML;
+        mainDiv.insertBefore(htmlWrapper(formattedName), mainDiv.firstChild);
+
+        if (bio.skills.length > 0) {
+            // jQuery solution
+            // $('#header').append(HTMLskillsStart);
+            // for (var i = 0; i < bio.skills.length; i++) {
+            //     $('#skills').append(HTMLskills.replace('%data%', bio.skills[i]))
+            // }
+
+            // vanilla Js solution
+            document.getElementById('header').innerHTML += HTMLskillsStart;
+            document.getElementById('skills-h3').style.display = 'block'; // Display #skills-h3
+            for (var i = 0; i < bio.skills.length; i++) {
+                var formattedSkill = HTMLskills.replace("%data%", bio.skills[i]);
+                document.getElementById('skills').innerHTML += formattedSkill;
+            }
+        }
+    }
 };
+bio.display();
 
 var work = {
     jobs: [
@@ -30,20 +60,84 @@ var work = {
             location: "Belém",
             description: "I do research in the Brain Computer Interfaces (BCI) field."
         }
-    ]
+    ],
+    display: function () {
+        for (job in work.jobs) {
+            var formattedEmployer = HTMLworkEmployer.replace('%data%', work.jobs[job].employer);
+            var formattedTitle = HTMLworkTitle.replace('%data%', work.jobs[job].title);
+            var formattedEmployerTitle = formattedEmployer + formattedTitle;
+            var formattedDates = HTMLworkDates.replace('%data%', work.jobs[job].dates);
+            var formattedLocation = HTMLworkLocation.replace('%data%', work.jobs[job].location);
+            var formattedDescription = HTMLworkDescription.replace('%data%', work.jobs[job].description);
+
+            // jQuery solution
+            // $('#workExperience').append(HTMLworkStart);
+            // $('.work-entry:last').append(formattedEmployerTitle);
+            // $('.work-entry:last').append(formattedDates);
+            // $('.work-entry:last').append(formattedLocation);
+            // $('.work-entry:last').append(formattedDescription);
+
+            // Vanilla Js solution
+            document.getElementById('workExperience').appendChild(htmlWrapper(HTMLworkStart));
+            var workEntries = document.getElementsByClassName('work-entry');
+            var lastWorkEntry = workEntries[workEntries.length-1];
+            lastWorkEntry.appendChild(htmlWrapper(formattedEmployerTitle));
+            lastWorkEntry.appendChild(htmlWrapper(formattedDates));
+            lastWorkEntry.appendChild(htmlWrapper(formattedLocation));
+            lastWorkEntry.appendChild(htmlWrapper(formattedDescription));
+        }
+    }
 };
+work.display();
 
 var projects = {
     projects: [
         {
             title: "Javascript Portfolio Site",
             dates: 2016,
-            description: "",
-            images: []
+            description: "Udacity course fo Javascript basics.",
+            images: [
+                'http://www.codeproject.com/KB/web-image/Google_map/sampleMap.JPG',
+                'https://developers.google.com/maps/images/lhimages/devices/3x1_runtastic.png'
+            ]
         }
-    ]
-};
+    ],
+    display: function () {
+        for (project in this.projects) {
+            var formattedProjTitle = HTMLprojectTitle.replace('%data%', this.projects[project].title);
+            var formattedProjDates = HTMLprojectDates.replace('%data%', this.projects[project].dates);
+            var formattedProjDescription = HTMLprojectDescription.replace('%data%', this.projects[project].description);
 
+            // jQuery solution
+            // $('#projects').append(HTMLprojectStart);
+            // var lastProjEntry = $('.project-entry:last');
+            // lastProjEntry.append(formattedProjTitle);
+            // lastProjEntry.append(formattedProjDates);
+            // lastProjEntry.append(formattedProjDescription);
+            // if (this.projects[project].images.length > 0) {
+            //     for (image in this.projects[project].images) {
+            //         var formattedImage = HTMLprojectImage.replace('%data%', this.projects[project].images[image]);
+            //         lastProjEntry.append(formattedImage);
+            //     }
+            // }
+
+            // Vanilla Js solution
+            document.getElementById('projects').appendChild(htmlWrapper(HTMLprojectStart));
+            var projectEntries = document.getElementsByClassName('project-entry');
+            var lastProjEntry = projectEntries[projectEntries.length-1];
+            lastProjEntry.appendChild(htmlWrapper(formattedProjTitle));
+            lastProjEntry.appendChild(htmlWrapper(formattedProjDates));
+            lastProjEntry.appendChild(htmlWrapper(formattedProjDescription));
+            if (this.projects[project].images.length > 0) {
+                for (image in this.projects[project].images) {
+                    var formattedImage = HTMLprojectImage.replace('%data%', this.projects[project].images[image]);
+                    lastProjEntry.appendChild(htmlWrapper(formattedImage));
+                }
+            }
+        }
+    }
+};
+projects.display();
 
 var education = {
     "schools": [
@@ -63,46 +157,45 @@ var education = {
             "dates": 2016,
             "url": "https://classroom.udacity.com/courses/ud804/"
         }
-    ]
+    ],
+    display: function () {
+        if (this.schools.length > 0 ) {
+            for (school in this.schools) {
+                document.getElementById('education').innerHTML += HTMLschoolStart;
+                var educationEntries = document.getElementsByClassName('education-entry')
+                var lastEntry = document.getElementsByClassName('education-entry')[educationEntries.length-1];
+                var formattedName = HTMLschoolName.replace('%data%', this.schools[school].name);
+                var formattedDates = HTMLschoolDates.replace('%data%', this.schools[school].dates);
+                var formattedLocation = HTMLschoolLocation.replace('%data%', this.schools[school].location);
+                var formattedDegree = HTMLschoolDegree.replace('%data%', this.schools[school].degree);
+                lastEntry.innerHTML += formattedName + formattedDegree;
+                lastEntry.innerHTML += formattedDates;
+                lastEntry.innerHTML += formattedLocation;
+                for (major in this.schools.majors) {
+                    formattedMajor = HTMLschoolMajor.replace('%data%', this.schools.majors[major]);
+                    lastEntry.innerHTML += formattedMajor;
+                }
+            }
+        }
+        if (this.onlineCourses.length > 0) {
+            for (course in this.onlineCourses) {
+                var educationEntries = document.getElementsByClassName('education-entry')
+                var lastEntry = document.getElementsByClassName('education-entry')[educationEntries.length-1];
+                var formattedTitle = HTMLonlineTitle.replace('%data%', this.onlineCourses[course].title);
+                var formattedSchool = HTMLonlineSchool.replace('%data%', this.onlineCourses[course].school);
+                var formattedDates = HTMLonlineDates.replace('%data%', this.onlineCourses[course].dates);
+                var formattedUrl = HTMLonlineURL.replace('%data%', this.onlineCourses[course].url);
+                lastEntry.innerHTML += HTMLonlineClasses;
+                lastEntry.innerHTML += formattedTitle + formattedSchool;
+                lastEntry.innerHTML += formattedDates;
+                lastEntry.innerHTML += formattedUrl;
+            }
+        }
+    }
 };
+education.display();
 
-// jQuery solution
-// formattedName = HTMLheaderName.replace('%data%', bio.name);
-// formattedRole = HTMLheaderRole.replace('%data%', bio.role);
-// $('#main').prepend(formattedRole);
-// $('#main').prepend(formattedName);
-
-// Vanilla Js solution
-var formattedName = htmlWrapper(HTMLheaderName.replace("%data%", bio.name));
-var formattedRole = htmlWrapper(HTMLheaderRole.replace("%data%", bio.role));
-var myMain = document.getElementById('main');
-var fRoleLength = formattedRole.length;
-for (var i = fRoleLength - 1; i >= 0; i--) {
-    myMain.insertBefore(formattedRole[i], myMain.firstChild);
-}
-myMain.insertBefore(formattedName, myMain.firstChild);
-
-
-if (bio.skills.length > 0) {
-    // jQuery solution
-    // $('#header').append(HTMLskillsStart);
-    // for (var i = 0; i < bio.skills.length; i++) {
-    //     $('#skills').append(HTMLskills.replace('%data%', bio.skills[i]))
-    // }
-
-    // vanilla Js solution
-    var skillsStart = htmlWrapper(HTMLskillsStart);
-    for (var i = 0; i <= skillsStart.length; i++) {
-        document.getElementById('header').appendChild(skillsStart[0]);
-    }
-    for (var i = 0; i < bio.skills.length; i++) {
-        var sk = htmlWrapper(HTMLskills.replace("%data%", bio.skills[i]));
-        document.getElementById('skills').appendChild(sk)
-    }
-
-}
-
-displayWork();
+$('#mapDiv').append(googleMap);
 
 // Vanilla Js solution
 document.getElementById('main').appendChild(htmlWrapper(internationalizeButton));
@@ -114,33 +207,6 @@ function htmlWrapper(htmlInput) {
         return wrapper.childNodes;
     } else {
         return wrapper.firstChild;
-    }
-}
-
-function displayWork() {
-    for (job in work.jobs) {
-        var formattedEmployer = HTMLworkEmployer.replace('%data%', work.jobs[job].employer);
-        var formattedTitle = HTMLworkTitle.replace('%data%', work.jobs[job].title);
-        var formattedEmployerTitle = formattedEmployer + formattedTitle;
-        var formattedDates = HTMLworkDates.replace('%data%', work.jobs[job].dates);
-        var formattedLocation = HTMLworkLocation.replace('%data%', work.jobs[job].location);
-        var formattedDescription = HTMLworkDescription.replace('%data%', work.jobs[job].description);
-
-        // jQuery solution
-        // $('#workExperience').append(HTMLworkStart);
-        // $('.work-entry:last').append(formattedEmployerTitle);
-        // $('.work-entry:last').append(formattedDates);
-        // $('.work-entry:last').append(formattedLocation);
-        // $('.work-entry:last').append(formattedDescription);
-
-        // Vanilla Js solution
-        document.getElementById('workExperience').appendChild(htmlWrapper(HTMLworkStart));
-        var workEntries = document.getElementsByClassName('work-entry');
-        var lastWorkEntry = workEntries[workEntries.length-1];
-        lastWorkEntry.appendChild(htmlWrapper(formattedEmployerTitle));
-        lastWorkEntry.appendChild(htmlWrapper(formattedDates));
-        lastWorkEntry.appendChild(htmlWrapper(formattedLocation));
-        lastWorkEntry.appendChild(htmlWrapper(formattedDescription));
     }
 }
 
