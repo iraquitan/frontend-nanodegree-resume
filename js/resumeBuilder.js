@@ -1,14 +1,9 @@
 /*
-This is empty on purpose! Your code to build the resume will go here.
+ This is empty on purpose! Your code to build the resume will go here.
  */
-var name = "Iraquitan Cordeiro Filho";
-var role = "Full Stack Web Developer";
-var picture = "https://avatars1.githubusercontent.com/u/3467229?v=3&s=460";
-var welcomeMessage = "Hi, I'm a Full Stack Web Developer";
-var skills = ["Python", "Web development", "Javascript"];
 var bio = {
-    name: name,
-    role: role,
+    name: "Iraquitan Cordeiro Filho",
+    role: "Full Stack Web Developer",
     contacts: {
         mobile: "+55 91 98289-4092",
         email: "iraquitanfilho@gmail.com",
@@ -16,34 +11,40 @@ var bio = {
         twitter: "@iraquitan_filho",
         location: "Belém"
     },
-    biopic: picture,
-    welcomeMessage: welcomeMessage,
-    skills: skills,
+    biopic: "https://avatars1.githubusercontent.com/u/3467229?v=3&s=460",
+    welcomeMessage: "Hi, I'm a Full Stack Web Developer",
+    skills: ["Python", "Web development", "Javascript"],
     display: function () {
-        var formattedName = HTMLheaderName.replace('%data%', bio.name);
-        var formattedRole = HTMLheaderRole.replace('%data%', bio.role);
-
-        // jQuery solution
-        // $('#main').prepend(formattedRole);
-        // $('#main').prepend(formattedName);
+        var formattedName = HTMLheaderName.replace('%data%', this.name);
+        var formattedRole = HTMLheaderRole.replace('%data%', this.role);
 
         // Vanilla Js solution
-        var mainDiv = document.getElementById('main');
-        mainDiv.innerHTML = formattedRole + mainDiv.innerHTML;
-        mainDiv.insertBefore(htmlWrapper(formattedName), mainDiv.firstChild);
+        var headerDiv = document.getElementById('header');
+        headerDiv.innerHTML = formattedRole + headerDiv.innerHTML;
+        headerDiv.innerHTML = formattedName + headerDiv.innerHTML;
+
+        var formattedMobile = HTMLmobile.replace('%data%', this.contacts.mobile);
+        var formattedEmail = HTMLemail.replace('%data%', this.contacts.email);
+        var formattedGithub = HTMLgithub.replace('%data%', this.contacts.github);
+        var formattedTwitter = HTMLtwitter.replace('%data%', this.contacts.twitter);
+        var formattedLocation = HTMLlocation.replace('%data%', this.contacts.location);
+
+        var topContacts = document.getElementById('topContacts');
+        topContacts.innerHTML += formattedMobile;
+        topContacts.innerHTML += formattedEmail;
+        topContacts.innerHTML += formattedGithub;
+        topContacts.innerHTML += formattedTwitter;
+        topContacts.innerHTML += formattedLocation;
+
+        var formattedBiopic = HTMLbioPic.replace('%data%', this.biopic);
+        var formattedWelcome = HTMLwelcomeMsg.replace('%data%', this.welcomeMessage);
+        headerDiv.innerHTML += formattedBiopic;
+        headerDiv.innerHTML += formattedWelcome;
 
         if (bio.skills.length > 0) {
-            // jQuery solution
-            // $('#header').append(HTMLskillsStart);
-            // for (var i = 0; i < bio.skills.length; i++) {
-            //     $('#skills').append(HTMLskills.replace('%data%', bio.skills[i]))
-            // }
-
-            // vanilla Js solution
             document.getElementById('header').innerHTML += HTMLskillsStart;
-            document.getElementById('skills-h3').style.display = 'block'; // Display #skills-h3
-            for (var i = 0; i < bio.skills.length; i++) {
-                var formattedSkill = HTMLskills.replace("%data%", bio.skills[i]);
+            for (var i = 0; i < this.skills.length; i++) {
+                formattedSkill = HTMLskills.replace("%data%", this.skills[i]);
                 document.getElementById('skills').innerHTML += formattedSkill;
             }
         }
@@ -70,17 +71,9 @@ var work = {
             var formattedLocation = HTMLworkLocation.replace('%data%', work.jobs[job].location);
             var formattedDescription = HTMLworkDescription.replace('%data%', work.jobs[job].description);
 
-            // jQuery solution
-            // $('#workExperience').append(HTMLworkStart);
-            // $('.work-entry:last').append(formattedEmployerTitle);
-            // $('.work-entry:last').append(formattedDates);
-            // $('.work-entry:last').append(formattedLocation);
-            // $('.work-entry:last').append(formattedDescription);
-
-            // Vanilla Js solution
             document.getElementById('workExperience').appendChild(htmlWrapper(HTMLworkStart));
             var workEntries = document.getElementsByClassName('work-entry');
-            var lastWorkEntry = workEntries[workEntries.length-1];
+            var lastWorkEntry = workEntries[workEntries.length - 1];
             lastWorkEntry.appendChild(htmlWrapper(formattedEmployerTitle));
             lastWorkEntry.appendChild(htmlWrapper(formattedDates));
             lastWorkEntry.appendChild(htmlWrapper(formattedLocation));
@@ -108,23 +101,9 @@ var projects = {
             var formattedProjDates = HTMLprojectDates.replace('%data%', this.projects[project].dates);
             var formattedProjDescription = HTMLprojectDescription.replace('%data%', this.projects[project].description);
 
-            // jQuery solution
-            // $('#projects').append(HTMLprojectStart);
-            // var lastProjEntry = $('.project-entry:last');
-            // lastProjEntry.append(formattedProjTitle);
-            // lastProjEntry.append(formattedProjDates);
-            // lastProjEntry.append(formattedProjDescription);
-            // if (this.projects[project].images.length > 0) {
-            //     for (image in this.projects[project].images) {
-            //         var formattedImage = HTMLprojectImage.replace('%data%', this.projects[project].images[image]);
-            //         lastProjEntry.append(formattedImage);
-            //     }
-            // }
-
-            // Vanilla Js solution
             document.getElementById('projects').appendChild(htmlWrapper(HTMLprojectStart));
             var projectEntries = document.getElementsByClassName('project-entry');
-            var lastProjEntry = projectEntries[projectEntries.length-1];
+            var lastProjEntry = projectEntries[projectEntries.length - 1];
             lastProjEntry.appendChild(htmlWrapper(formattedProjTitle));
             lastProjEntry.appendChild(htmlWrapper(formattedProjDates));
             lastProjEntry.appendChild(htmlWrapper(formattedProjDescription));
@@ -159,11 +138,11 @@ var education = {
         }
     ],
     display: function () {
-        if (this.schools.length > 0 ) {
+        if (this.schools.length > 0) {
             for (school in this.schools) {
                 document.getElementById('education').innerHTML += HTMLschoolStart;
-                var educationEntries = document.getElementsByClassName('education-entry')
-                var lastEntry = document.getElementsByClassName('education-entry')[educationEntries.length-1];
+                var educationEntries = document.getElementsByClassName('education-entry');
+                var lastEntry = document.getElementsByClassName('education-entry')[educationEntries.length - 1];
                 var formattedName = HTMLschoolName.replace('%data%', this.schools[school].name);
                 var formattedDates = HTMLschoolDates.replace('%data%', this.schools[school].dates);
                 var formattedLocation = HTMLschoolLocation.replace('%data%', this.schools[school].location);
@@ -180,7 +159,7 @@ var education = {
         if (this.onlineCourses.length > 0) {
             for (course in this.onlineCourses) {
                 var educationEntries = document.getElementsByClassName('education-entry')
-                var lastEntry = document.getElementsByClassName('education-entry')[educationEntries.length-1];
+                var lastEntry = document.getElementsByClassName('education-entry')[educationEntries.length - 1];
                 var formattedTitle = HTMLonlineTitle.replace('%data%', this.onlineCourses[course].title);
                 var formattedSchool = HTMLonlineSchool.replace('%data%', this.onlineCourses[course].school);
                 var formattedDates = HTMLonlineDates.replace('%data%', this.onlineCourses[course].dates);
