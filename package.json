@@ -1,0 +1,27 @@
+{
+  "name": "frontend-nanodegree-resume",
+  "version": "1.0.0",
+  "description": "Review the Online Resume [Project Rubric](https://review.udacity.com/?_ga=1.189245867.12280332.1465333852#!/projects/2962818615/rubric).",
+  "main": "js/resumeBuilder.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iraquitan/frontend-nanodegree-resume.git"
+  },
+  "author": "Iraquitan Cordeiro Filho",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iraquitan/frontend-nanodegree-resume/issues"
+  },
+  "homepage": "https://github.com/iraquitan/frontend-nanodegree-resume#readme",
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "browser-sync": "^2.14.3",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-sass": "^2.3.2"
+  }
+}
