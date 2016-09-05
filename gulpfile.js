@@ -2,19 +2,27 @@
  * Created by iraquitan on 9/1/16.
  */
 /*eslint-env node */
+/*eslint-disable no-console*/
 
 var gulp = require("gulp");
 var sass = require("gulp-sass");
 var autoprefixer = require("gulp-autoprefixer");
 var browserSync = require("browser-sync").create();
 var eslint = require("gulp-eslint");
+var concat = require("gulp-concat");
+var uglify = require("gulp-uglify");
+var babel = require("gulp-babel");
+var sourcemaps = require("gulp-sourcemaps");
+var imagemin = require("gulp-imagemin");
 
-gulp.task("default", ["styles", "lint"], function () {
+gulp.task("default", ["copy-html", "scripts", "copy-images", "styles", "lint"], function () {
     // default tasks here
     gulp.watch("./sass/**/*.scss", ["styles"]);
-    gulp.watch("./js/**/*.js", ["lint"]);
+    // gulp.watch("./js/**/*.js", ["lint"]);
+    gulp.watch("./index.html", ["copy-html"]);
+    gulp.watch("./dist/index.html").on("change", browserSync.reload);
     browserSync.init({
-        server: "./",
+        server: "./dist",
         browser: "google chrome"
     });
 });
@@ -38,11 +46,44 @@ gulp.task("lint", function () {
 
 gulp.task("styles", function () {
     gulp.src("./sass/**/*.scss")
-        .pipe(sass().on("error", sass.logError))
+        .pipe(sourcemaps.init())
+        .pipe(sass({outputStyle: "compressed"}).on("error", sass.logError))
         .pipe(autoprefixer({
             browsers: ["last 2 versions"]
         }))
-        .pipe(gulp.dest("./css"))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest("./dist/css"))
         .pipe(browserSync.stream());
 });
 
+gulp.task("copy-html", function () {
+    gulp.src("./index.html")
+        .pipe(gulp.dest("./dist"));
+});
+
+gulp.task("copy-images", function () {
+    gulp.src("./images/*")
+        .pipe(imagemin({
+            progressive: true,
+        }))
+        .pipe(gulp.dest("./dist/images"));
+});
+
+gulp.task("scripts", function () {
+    gulp.src(["./js/jQuery.js", "./js/helper.js", "./js/*.js"])
+        .pipe(babel())
+        .pipe(concat("all.js"))
+        .pipe(gulp.dest("./dist/js"));
+});
+
+gulp.task("scripts-dist", function () {
+    gulp.src(["./js/jQuery.js", "./js/helper.js", "./js/*.js"])
+        .pipe(sourcemaps.init())
+        .pipe(babel())
+        .pipe(concat("all.js"))
+        .pipe(uglify().on("error", function(e){console.log(e);}))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest("./dist/js"));
+});
+
+gulp.task("dist", ["copy-html", "copy-images", "styles", "lint", "scripts-dist"]);
